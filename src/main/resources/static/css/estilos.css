@@ -1,6 +1,10 @@
 #contenedorTitulo {
     text-align: center;
     color: purple;
+    border: 2px salmon;
+    widows: 50;
+    /*centrar in div*/
+    margin: 0 auto;
 }
 
 .parrafoSecundario {
@@ -21,9 +25,45 @@ h1 {
 }
 
 h2 {
-    font-size: 2.6em;
+    font-size: 25px;
 }
 
 h3 {
-    font-size: 2.7em;
+    font-size: 1em;
+}
+
+p span#textoImportante {
+    color: brown;
+}
+
+a{
+    border: 2px solid navy;
+    background-color: darkblue;
+    color: white;
+    border-radius: 20px;
+    padding: 5px;
+    margin: 10px;
+}
+
+a:link {
+    color:coral;
+    font-size: 20px;
+}
+
+a:visited{
+    color:darkgreen;
+}
+
+a:hover{
+    background: green;
+    color: aliceblue;
+}
+
+a:active{
+    background: burlywood;
+    color: aliceblue;
+}
+
+p[name="Pamela"]{
+    
 }
