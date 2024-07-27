@@ -1,5 +1,8 @@
 package com.tienda;
 
+import com.tienda.domain.RequestMatcher;
+import com.tienda.service.RequestMatcherService;
+import java.util.List;
 import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -64,7 +67,7 @@ public class ProjectConfig implements WebMvcConfigurer {
         registry.addViewController("/registro/nuevo").setViewName("/registro/nuevo");
     }
 
-    @Bean
+    /* @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((request) -> request
@@ -93,7 +96,7 @@ public class ProjectConfig implements WebMvcConfigurer {
                 .loginPage("/login").permitAll())
                 .logout((logout) -> logout.permitAll());
         return http.build();
-    }
+    } */
 
     /* El siguiente método se utiliza para completar la clase no es 
     realmente funcional, la próxima semana se reemplaza con usuarios de BD
@@ -123,6 +126,36 @@ public class ProjectConfig implements WebMvcConfigurer {
     @Autowired
     public void configurerGlobal(AuthenticationManagerBuilder build) throws Exception {
         build.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+    }
+    
+    @Autowired
+    RequestMatcherService requestMatcherService;
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Traer de BD los registros
+        List<RequestMatcher> requestMatchers = requestMatcherService.getAllRequestMatchers();
+
+        http
+                .authorizeHttpRequests((request) -> {
+                    request
+                            .requestMatchers("/", "/index", "/errores/**", "/error", "/error/**",
+                                    "/carrito/**", "/pruebas/**", "/reportes/**",
+                                    "/registro/**", "/js/**", "/css/**", "/webjars/**")
+                            .permitAll();
+
+                    for (RequestMatcher matcher : requestMatchers) {
+                        request
+                                .requestMatchers(matcher.getPattern())
+                                .hasRole(matcher.getRoleName());
+                    }
+                })
+                .formLogin((form) -> form
+                .loginPage("/login").permitAll())
+                .logout((logout) -> logout.permitAll());
+
+        return http.build();
+
     }
     
 }
